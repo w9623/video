@@ -1,6 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:video/widgets/common/button.dart';
+import 'package:video/widgets/common/card.dart';
+import 'package:video/widgets/common/image.dart';
 import 'package:video/widgets/common/indicator.dart';
+import 'package:video/widgets/text_expand.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,6 +19,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   List<String> tabTextList = ["推荐", "关注"];
   List<Tab> tabWidgetList = [];
   late TabController tabController;
+  static const timerCount = 10;
+  int count = timerCount; //初始倒计时时间
+  Timer? timer; //倒计时的计时器
 
   @override
   void initState() {
@@ -24,6 +33,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ));
     }
     tabController = new TabController(length: tabTextList.length, vsync: this);
+    // _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _stopTimer();
+    super.dispose();
   }
 
   @override
@@ -41,7 +57,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             top: 0,
             bottom: 0,
             child: Container(
-              color: Colors.black,
+              color: Colors.black.withOpacity(0.5),
             ),
           ),
           Positioned(
@@ -58,6 +74,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             bottom: 0,
             child: buildTabBarWidget(),
           ),
+          Container(
+            alignment: Alignment.bottomLeft,
+            child: BuildBottomWidget(),
+          ),
         ],
       ),
     );
@@ -69,9 +89,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       controller: tabController,
       children: tabTextList
           .map((value) => Container(
-        alignment: Alignment.center,
-        child: Text("$value",style: TextStyle(color: Colors.white),),
-      ))
+                alignment: Alignment.center,
+                child: Text(
+                  "$value",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
           .toList(),
     );
   }
@@ -79,35 +102,545 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   //构建顶部标签部分
   buildTabBarWidget() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(),
+        SizedBox(width: 17.w),
         Container(
-          margin: EdgeInsets.only(top: 19.5.h),
-          ///对齐在顶部中间
+          margin: EdgeInsets.only(top: 51.h),
           alignment: Alignment.topCenter,
-          child: TabBar(
-            controller: tabController,
-            tabs: tabWidgetList,
-            isScrollable: true,
-            ///指示器的宽度与文字对齐
-            indicatorSize: TabBarIndicatorSize.label,
-            indicator: RoundUnderlineTabIndicator(
-              width: 22.5.w,
-              borderSide: BorderSide(
-                width: 3.h,
-                color: Colors.white,
-              ),
-            ),
-            labelStyle: TextStyle(
-              fontSize: 20.sp,
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontSize: 15.sp
+          child: CardWidget(
+            height: 25.h,
+            color: Colors.black.withOpacity(0.2),
+            child: Row(
+              children: [
+                SizedBox(width: 10.w),
+                Image.asset("assets/images/ic_hot.png", width: 12.w, height: 15.h),
+                SizedBox(width: 8.w),
+                Text(
+                  "99999",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.sp,
+                  ),
+                ),
+                SizedBox(width: 12.w)
+              ],
             ),
           ),
         ),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.only(right: 30.w),
+            margin: EdgeInsets.only(top: 30.h),
+            height: 55.h,
+
+            ///对齐在顶部中间
+            alignment: Alignment.topCenter,
+            child: TabBar(
+              controller: tabController,
+              tabs: tabWidgetList,
+              isScrollable: true,
+
+              ///指示器的宽度与文字对齐
+              indicatorSize: TabBarIndicatorSize.label,
+              indicatorPadding: EdgeInsets.only(bottom: 8.h),
+              indicator: RoundUnderlineTabIndicator(
+                width: 22.5.w,
+                borderSide: BorderSide(
+                  width: 3.h,
+                  color: Colors.white,
+                ),
+              ),
+              labelStyle: TextStyle(
+                fontSize: 20.sp,
+              ),
+              unselectedLabelStyle: TextStyle(fontSize: 15.sp),
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () {},
+          child: Container(
+            height: 30.h,
+            margin: EdgeInsets.only(top: 51.h),
+            alignment: Alignment.topCenter,
+            child: Image.asset(
+              "assets/images/ic_search.png",
+              width: 17.w,
+              height: 17.w,
+            ),
+          ),
+        ),
+        SizedBox(width: 20.w)
       ],
     );
   }
 
+  _startTimer() {
+    setState(() {
+      count = timerCount;
+      _update();
+    });
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      count--;
+      _update();
+    });
+  }
+
+  _stopTimer() {
+    timer?.cancel(); //倒计时结束取消定时器
+    count = timerCount; //重置时间
+  }
+
+  _update() {
+    setState(() {
+      if (count == 0) {
+        timer?.cancel(); //倒计时结束取消定时器
+        count = timerCount; //重置时间
+        //预览结束弹窗
+        showDialog(
+          context: context,
+          builder: (context) {
+            return UnconstrainedBox(
+              constrainedAxis: Axis.horizontal,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/images/bg_dialog.png",
+                      height: 440.h,
+                    ),
+                    SizedBox(height: 24.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DialogButton(
+                          "开通贵族",
+                          () {},
+                        ),
+                        SizedBox(width: 17.w),
+                        DialogButton(
+                          "邀请无限看",
+                          () {},
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }
+    });
+  }
+}
+
+class BuildBottomWidget extends StatefulWidget {
+  const BuildBottomWidget({Key? key}) : super(key: key);
+
+  @override
+  State<BuildBottomWidget> createState() => _BuildBottomWidgetState();
+}
+
+class _BuildBottomWidgetState extends State<BuildBottomWidget> {
+  List<String> tagList = ['标签', '标签', '标签'];
+  bool isVideo = false; //是否在直播中
+  bool isLove = false; //是否点赞
+
+  @override
+  initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomLeft,
+      height: 370.h,
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 18.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Spacer(),
+                //加入守护
+                CardWidget(
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) {
+                          return UnconstrainedBox(
+                            constrainedAxis: Axis.horizontal,
+                            child: Container(
+                              height: 321.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(18.w),
+                                  topRight: Radius.circular(18.w),
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 27.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 50.w),
+                                          child: Center(
+                                            child: Text(
+                                              "确认支付",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18.sp,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Color(0xFFb4b4b4),
+                                          size: 25.w,
+                                        ),
+                                      ),
+                                      SizedBox(width: 20.w)
+                                    ],
+                                  ),
+                                  SizedBox(height: 32.h),
+                                  Text(
+                                    "免费播放前10s，观看完整版请支付",
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.75),
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 38.h),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/ic_diamond.png",
+                                        width: 40.w,
+                                        height: 30.h,
+                                      ),
+                                      Text(
+                                        "30钻石",
+                                        style: TextStyle(
+                                          color: Color(0xFF79A6FD),
+                                          fontSize: 24.sp,
+                                          height: 1.1
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 42.h),
+                                  CardWidget(
+                                    width: double.infinity,
+                                    height: 44.h,
+                                    margin: EdgeInsets.only(left: 19.w, right: 19.w),
+                                    alignment: Alignment.center,
+                                    color: Color(0xFF7AA6FE),
+                                    circular: 20.r,
+                                    child: Text(
+                                      "确认支付",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  Text(
+                                    "*我们不生产视频，我们只做视频的搬运工*",
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.75),
+                                      fontSize: 9.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 15.h)
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  padding: EdgeInsets.only(left: 16.w, right: 8.w, top: 5.h, bottom: 5.h),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Color(0xFFFF44AA),
+                      Color(0xFFFF3566),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "加入守护，视频免费看",
+                        style: TextStyle(color: Colors.white, fontSize: 11.sp, height: 1.1),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 12.w,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                //标签
+                Row(
+                  children: List.generate(
+                    3,
+                    (index) => _buildTagWidget(tagList[index]),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                //名称
+                CardWidget(
+                  child: Row(
+                    children: [
+                      Text(
+                        "@",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                      Text(
+                        "汉服频道，小众爱好",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Container(
+                  constraints: BoxConstraints(maxWidth: 175.w),
+                  child: ExpandableText(
+                    text: "这里是视频介绍，最多两行，多的视频省略弄查看更多查看更多查看更多查看查看更多查看12",
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.75),
+                      fontSize: 11.sp,
+                    ),
+                    expand: false,
+                  ),
+                ),
+                SizedBox(height: 11.h),
+                Row(
+                  children: [
+                    CardWidget(
+                      padding: EdgeInsets.only(left: 7.w, top: 5.h, bottom: 5.h, right: 15.w),
+                      color: Color(0xFF7AA6FE),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/images/ic_diamond.png",
+                            width: 15.w,
+                            height: 13.w,
+                          ),
+                          SizedBox(width: 3.w),
+                          Text(
+                            "111",
+                            style: TextStyle(color: Colors.white, fontSize: 10.sp, height: 1.1),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    CardWidget(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h, right: 10.h, left: 9.h),
+                      color: Color(0xFF7AA6FE),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/images/ic_video.png",
+                            width: 15.w,
+                            height: 13.w,
+                          ),
+                          SizedBox(width: 3.w),
+                          Text(
+                            "预览10s,邀请好友观看完整版",
+                            style: TextStyle(color: Colors.white, fontSize: 10.sp, height: 1.1),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 7.w),
+                    Text(
+                      "03:25",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11.sp,
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 19.h)
+              ],
+            ),
+          ),
+          const Spacer(),
+          Container(
+            child: Column(
+              children: [
+                //头像
+                Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(border: Border.all(width: 2.w, color: Color(0xFF7ba9fb)), shape: BoxShape.circle),
+                      child: ImageWidget(
+                        "",
+                        width: 39.w,
+                        height: 39.w,
+                      ),
+                    ),
+                    isVideo == false
+                        ? Container(
+                            margin: EdgeInsets.only(top: 50.h, left: 3.w),
+                            padding: EdgeInsets.only(top: 3.h, bottom: 3.h, left: 6.w, right: 6.w),
+                            decoration: BoxDecoration(color: Color(0xFF7ba9fb), borderRadius: BorderRadius.all(Radius.circular(10.r))),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  "assets/images/ic_hot.png",
+                                  width: 9.w,
+                                  height: 6.w,
+                                ),
+                                SizedBox(width: 1.w),
+                                Text(
+                                  "直播中",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 7.sp,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () {},
+                            child: Container(
+                              margin: EdgeInsets.only(top: 45.h, left: 15.w),
+                              width: 13.w,
+                              height: 13.w,
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF7ba9fb)),
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 10.w,
+                              ),
+                            ),
+                          )
+                  ],
+                ),
+                SizedBox(height: 27.h),
+                //爱心
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      isLove = !isLove;
+                    });
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        isLove == false ? "assets/images/ic_love.png" : "assets/images/ic_love_click.png",
+                        width: 25.w,
+                        height: 22.w,
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        "520k",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11.sp,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 27.h),
+                InkWell(
+                  onTap: () {},
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/ic_gift.png",
+                        width: 23.w,
+                        height: 23.w,
+                      ),
+                      SizedBox(height: 5.h),
+                      Text(
+                        "打赏",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.sp,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 27.h),
+                InkWell(
+                  onTap: () {},
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/ic_share.png",
+                        width: 23.w,
+                        height: 23.w,
+                      ),
+                      SizedBox(height: 5.h),
+                      Text(
+                        "分享",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.sp,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 69.h)
+              ],
+            ),
+          ),
+          SizedBox(width: 18.w)
+        ],
+      ),
+    );
+  }
+
+  _buildTagWidget(String tag) {
+    return CardWidget(
+      padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 6.h, bottom: 6.h),
+      margin: EdgeInsets.only(right: 6.w),
+      circular: 12.w,
+      color: Colors.black.withOpacity(0.3),
+      child: Text(
+        "# ${tag}",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 12.sp,
+        ),
+      ),
+    );
+  }
 }

@@ -30,6 +30,8 @@ dependencies:
   fluro: ^2.0.3
   # https://pub.flutter-io.cn/packages/oktoast
   oktoast: ^3.2.0
+  # https://pub.flutter-io.cn/packages/cached_network_image
+  cached_network_image: ^3.2.1
 
 dev_dependencies:
   flutter_test:
