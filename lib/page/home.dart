@@ -277,7 +277,6 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                           return UnconstrainedBox(
                             constrainedAxis: Axis.horizontal,
                             child: Container(
-                              height: 321.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(18.w),
@@ -337,11 +336,7 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                                       ),
                                       Text(
                                         "30钻石",
-                                        style: TextStyle(
-                                          color: Color(0xFF79A6FD),
-                                          fontSize: 24.sp,
-                                          height: 1.1
-                                        ),
+                                        style: TextStyle(color: Color(0xFF79A6FD), fontSize: 24.sp, height: 1.1),
                                       ),
                                     ],
                                   ),
@@ -446,6 +441,63 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                 Row(
                   children: [
                     CardWidget(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) {
+                            return UnconstrainedBox(
+                              constrainedAxis: Axis.horizontal,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(18.r),
+                                        topLeft: Radius.circular(18.r),
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 27.h),
+                                        Row(
+                                          children: [
+                                            const Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Icon(
+                                                Icons.close,
+                                                color: Color(0xFFb4b4b4),
+                                                size: 18.w,
+                                              ),
+                                            ),
+                                            SizedBox(width: 20.w)
+                                          ],
+                                        ),
+                                        SizedBox(height: 57.h),
+                                        Center(
+                                          child: Text(
+                                            "打赏视频博主",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18.sp,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 17.h),
+
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
                       padding: EdgeInsets.only(left: 7.w, top: 5.h, bottom: 5.h, right: 15.w),
                       color: Color(0xFF7AA6FE),
                       child: Row(
