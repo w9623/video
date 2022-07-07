@@ -101,16 +101,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   //构建顶部标签部分
   buildTabBarWidget() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(width: 17.w),
-        Container(
-          margin: EdgeInsets.only(top: 51.h),
-          alignment: Alignment.topCenter,
-          child: CardWidget(
+    return Padding(
+      padding: EdgeInsets.only(top: 40.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 17.w),
+          CardWidget(
+            margin: EdgeInsets.only(top: 18.h),
+            alignment: Alignment.center,
             height: 25.h,
             color: Colors.black.withOpacity(0.2),
+            circular: 20.w,
             child: Row(
               children: [
                 SizedBox(width: 10.w),
@@ -127,52 +129,51 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ],
             ),
           ),
-        ),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.only(right: 30.w),
-            margin: EdgeInsets.only(top: 30.h),
-            height: 55.h,
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(right: 15.w),
+              height: 55.h,
 
-            ///对齐在顶部中间
-            alignment: Alignment.topCenter,
-            child: TabBar(
-              controller: tabController,
-              tabs: tabWidgetList,
-              isScrollable: true,
+              ///对齐在顶部中间
+              alignment: Alignment.center,
+              child: TabBar(
+                controller: tabController,
+                tabs: tabWidgetList,
+                isScrollable: true,
 
-              ///指示器的宽度与文字对齐
-              indicatorSize: TabBarIndicatorSize.label,
-              indicatorPadding: EdgeInsets.only(bottom: 8.h),
-              indicator: RoundUnderlineTabIndicator(
-                width: 22.5.w,
-                borderSide: BorderSide(
-                  width: 3.h,
-                  color: Colors.white,
+                ///指示器的宽度与文字对齐
+                indicatorSize: TabBarIndicatorSize.label,
+                indicatorPadding: EdgeInsets.only(bottom: 8.h),
+                indicator: RoundUnderlineTabIndicator(
+                  width: 22.5.w,
+                  borderSide: BorderSide(
+                    width: 3.h,
+                    color: Colors.white,
+                  ),
                 ),
+                labelStyle: TextStyle(
+                  fontSize: 20.sp,
+                ),
+                unselectedLabelStyle: TextStyle(fontSize: 15.sp),
               ),
-              labelStyle: TextStyle(
-                fontSize: 20.sp,
-              ),
-              unselectedLabelStyle: TextStyle(fontSize: 15.sp),
             ),
           ),
-        ),
-        InkWell(
-          onTap: () {},
-          child: Container(
-            height: 30.h,
-            margin: EdgeInsets.only(top: 51.h),
-            alignment: Alignment.topCenter,
-            child: Image.asset(
-              "assets/images/ic_search.png",
-              width: 17.w,
-              height: 17.w,
+          InkWell(
+            onTap: () {},
+            child: Container(
+              padding: EdgeInsets.only(top: 14.h),
+              height: 50.h,
+              alignment: Alignment.centerRight,
+              child: Image.asset(
+                "assets/images/ic_search.png",
+                width: 25.w,
+                height: 25.w,
+              ),
             ),
           ),
-        ),
-        SizedBox(width: 20.w)
-      ],
+          SizedBox(width: 20.w)
+        ],
+      ),
     );
   }
 
@@ -248,6 +249,8 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
   List<String> tagList = ['标签', '标签', '标签'];
   bool isVideo = false; //是否在直播中
   bool isLove = false; //是否点赞
+  List<int> moneyList = [10, 30, 50, 100, 300, 500];
+  TextEditingController moneyController = TextEditingController();
 
   @override
   initState() {
@@ -441,63 +444,7 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                 Row(
                   children: [
                     CardWidget(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) {
-                            return UnconstrainedBox(
-                              constrainedAxis: Axis.horizontal,
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(18.r),
-                                        topLeft: Radius.circular(18.r),
-                                      ),
-                                      color: Colors.white,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height: 27.h),
-                                        Row(
-                                          children: [
-                                            const Spacer(),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Icon(
-                                                Icons.close,
-                                                color: Color(0xFFb4b4b4),
-                                                size: 18.w,
-                                              ),
-                                            ),
-                                            SizedBox(width: 20.w)
-                                          ],
-                                        ),
-                                        SizedBox(height: 57.h),
-                                        Center(
-                                          child: Text(
-                                            "打赏视频博主",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 17.h),
-
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
+                      onTap: () {},
                       padding: EdgeInsets.only(left: 7.w, top: 5.h, bottom: 5.h, right: 15.w),
                       color: Color(0xFF7AA6FE),
                       child: Row(
@@ -563,11 +510,14 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                         height: 39.w,
                       ),
                     ),
-                    isVideo == false
+                    isVideo == true
                         ? Container(
-                            margin: EdgeInsets.only(top: 50.h, left: 3.w),
+                            margin: EdgeInsets.only(top: 39.h, left: 0.w),
                             padding: EdgeInsets.only(top: 3.h, bottom: 3.h, left: 6.w, right: 6.w),
-                            decoration: BoxDecoration(color: Color(0xFF7ba9fb), borderRadius: BorderRadius.all(Radius.circular(10.r))),
+                            decoration: BoxDecoration(
+                              color: Color(0xFF7ba9fb),
+                              borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                            ),
                             child: Row(
                               children: [
                                 Image.asset(
@@ -589,9 +539,10 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                         : InkWell(
                             onTap: () {},
                             child: Container(
-                              margin: EdgeInsets.only(top: 45.h, left: 15.w),
+                              margin: EdgeInsets.only(top: 37.h, left: 15.w),
                               width: 13.w,
                               height: 13.w,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF7ba9fb)),
                               child: Icon(
                                 Icons.add,
@@ -630,7 +581,162 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                 ),
                 SizedBox(height: 27.h),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return Container(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: SingleChildScrollView(
+                            child: UnconstrainedBox(
+                              constrainedAxis: Axis.horizontal,
+                              child: Container(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(top: 45.h),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(18.r),
+                                          topLeft: Radius.circular(18.r),
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(height: 27.h),
+                                          Row(
+                                            children: [
+                                              const Spacer(),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Color(0xFFb4b4b4),
+                                                  size: 25.w,
+                                                ),
+                                              ),
+                                              SizedBox(width: 20.w)
+                                            ],
+                                          ),
+                                          SizedBox(height: 11.h),
+                                          Center(
+                                            child: Text(
+                                              "打赏视频博主",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18.sp,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 17.h),
+                                          Container(
+                                            padding: EdgeInsets.only(right: 19.w, left: 19.w),
+                                            child: GridView.builder(
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 3,
+                                                mainAxisSpacing: 10,
+                                                crossAxisSpacing: 5,
+                                                childAspectRatio: 1 / 0.5,
+                                              ),
+                                              itemCount: moneyList.length,
+                                              itemBuilder: (context, index) => _buildRewardWidget(moneyList[index], () {}),
+                                            ),
+                                            // constraints: BoxConstraints(maxHeight: 150.h),
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.only(top: 10.h, right: 19.w, left: 19.w),
+                                            height: 49.h,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(5.r)),
+                                              border: Border.all(
+                                                color: Color(0xFF79A6FD),
+                                                width: 0.5.w,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(width: 15.w),
+                                                Image.asset(
+                                                  "assets/images/ic_diamond.png",
+                                                  width: 24.w,
+                                                  height: 19.h,
+                                                ),
+                                                SizedBox(width: 6.w),
+                                                Expanded(
+                                                  child: TextField(
+                                                    keyboardType: TextInputType.number,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                      color: Color(0xFF79A6FD),
+                                                      fontSize: 14.sp,
+                                                    ),
+                                                    decoration: InputDecoration(
+                                                        border: InputBorder.none,
+                                                        hintText: "请输入自定义打赏钻石",
+                                                        hintStyle: TextStyle(
+                                                          color: Colors.black.withOpacity(0.5),
+                                                          fontSize: 14.sp,
+                                                        )),
+                                                    controller: moneyController,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(height: 13.h),
+                                          CardWidget(
+                                            width: double.infinity,
+                                            height: 44.h,
+                                            alignment: Alignment.center,
+                                            margin: EdgeInsets.only(right: 19.w, left: 19.w, bottom: 13.h),
+                                            onTap: () {},
+                                            color: Color(0xFF7AA6FE),
+                                            circular: 22.r,
+                                            child: Text(
+                                              "确认打赏",
+                                              style: TextStyle(color: Colors.white, fontSize: 14.sp, height: 1.1),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(bottom: 10.h),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: Color(0xFF81a7f7),
+                                              width: 4.w,
+                                            ),
+                                          ),
+                                          child: ImageWidget(
+                                            "",
+                                            width: 88.w,
+                                            height: 88.w,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                   child: Column(
                     children: [
                       Image.asset(
@@ -691,6 +797,40 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
         style: TextStyle(
           color: Colors.white,
           fontSize: 12.sp,
+        ),
+      ),
+    );
+  }
+
+  //打赏网格组件
+  Widget _buildRewardWidget(int money, GestureTapCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5.r)),
+          border: Border.all(
+            color: Color(0xFF79A6FD),
+            width: 0.5.w,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/images/ic_diamond.png",
+              width: 24.w,
+              height: 19.h,
+            ),
+            SizedBox(width: 6.w),
+            Text(
+              "${money}钻石",
+              style: TextStyle(
+                color: Color(0xFF79A6FD),
+                fontSize: 14.sp,
+              ),
+            )
+          ],
         ),
       ),
     );
