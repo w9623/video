@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:video/app/routes.dart';
+import 'package:video/utils/navigator_util.dart';
 import 'package:video/widgets/common/button.dart';
 import 'package:video/widgets/common/card.dart';
 import 'package:video/widgets/common/image.dart';
@@ -159,7 +161,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              NavigatorUtil.go(context, Routes.search);
+            },
             child: Container(
               padding: EdgeInsets.only(top: 14.h),
               height: 50.h,
