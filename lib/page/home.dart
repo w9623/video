@@ -507,7 +507,10 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                 Stack(
                   children: [
                     Container(
-                      decoration: BoxDecoration(border: Border.all(width: 2.w, color: Color(0xFF7ba9fb)), shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2.w, color: Color(0xFF7ba9fb)),
+                        shape: BoxShape.circle,
+                      ),
                       child: ImageWidget(
                         "",
                         width: 39.w,
@@ -516,7 +519,7 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                     ),
                     isVideo == true
                         ? Container(
-                            margin: EdgeInsets.only(top: 39.h, left: 0.w),
+                            margin: EdgeInsets.only(top: 36.w, left: 2.w),
                             padding: EdgeInsets.only(top: 3.h, bottom: 3.h, left: 6.w, right: 6.w),
                             decoration: BoxDecoration(
                               color: Color(0xFF7ba9fb),
@@ -540,18 +543,21 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                               ],
                             ),
                           )
-                        : InkWell(
-                            onTap: () {},
-                            child: Container(
-                              margin: EdgeInsets.only(top: 37.h, left: 15.w),
-                              width: 13.w,
-                              height: 13.w,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF7ba9fb)),
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 10.w,
+                        : Container(
+                            // height: 48.w,
+                            child: InkWell(
+                              onTap: () {},
+                              child: Container(
+                                margin: EdgeInsets.only(top: 36.w, left: 15.w),
+                                width: 13.w,
+                                height: 13.w,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF7ba9fb)),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 10.w,
+                                ),
                               ),
                             ),
                           )
@@ -600,7 +606,7 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                                 child: Stack(
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(top: 45.h),
+                                      margin: EdgeInsets.only(top: 50.h),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.only(
                                           topRight: Radius.circular(18.r),
@@ -647,7 +653,7 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                                                 crossAxisCount: 3,
                                                 mainAxisSpacing: 10,
                                                 crossAxisSpacing: 5,
-                                                childAspectRatio: 1 / 0.5,
+                                                childAspectRatio: 1.08 / 0.48,
                                               ),
                                               itemCount: moneyList.length,
                                               itemBuilder: (context, index) => _buildRewardWidget(moneyList[index], () {}),
@@ -665,7 +671,6 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                                               ),
                                             ),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 SizedBox(width: 15.w),
                                                 Image.asset(
@@ -673,23 +678,25 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                                                   width: 24.w,
                                                   height: 19.h,
                                                 ),
-                                                SizedBox(width: 6.w),
+                                                SizedBox(width: 3.w),
                                                 Expanded(
-                                                  child: TextField(
-                                                    keyboardType: TextInputType.number,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      color: Color(0xFF79A6FD),
-                                                      fontSize: 14.sp,
-                                                    ),
-                                                    decoration: InputDecoration(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(bottom: 8.h),
+                                                    child: TextField(
+                                                      keyboardType: TextInputType.number,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                        color: Color(0xFF79A6FD),
+                                                        fontSize: 14.sp,
+                                                        height: 1.1,
+                                                      ),
+                                                      decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                         hintText: "请输入自定义打赏钻石",
-                                                        hintStyle: TextStyle(
-                                                          color: Colors.black.withOpacity(0.5),
-                                                          fontSize: 14.sp,
-                                                        )),
-                                                    controller: moneyController,
+                                                        hintStyle: TextStyle(color: Colors.black.withOpacity(0.5), fontSize: 14.sp, height: 1.1),
+                                                      ),
+                                                      controller: moneyController,
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -716,7 +723,6 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                          margin: EdgeInsets.only(bottom: 10.h),
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(
@@ -726,8 +732,8 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
                                           ),
                                           child: ImageWidget(
                                             "",
-                                            width: 88.w,
-                                            height: 88.w,
+                                            width: 70.w,
+                                            height: 70.w,
                                           ),
                                         ),
                                       ],
@@ -826,13 +832,9 @@ class _BuildBottomWidgetState extends State<BuildBottomWidget> {
               width: 24.w,
               height: 19.h,
             ),
-            SizedBox(width: 6.w),
             Text(
               "${money}钻石",
-              style: TextStyle(
-                color: Color(0xFF79A6FD),
-                fontSize: 14.sp,
-              ),
+              style: TextStyle(color: Color(0xFF79A6FD), fontSize: 14.sp, height: 1.1),
             )
           ],
         ),

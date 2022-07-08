@@ -32,6 +32,8 @@ dependencies:
   oktoast: ^3.2.0
   # https://pub.flutter-io.cn/packages/cached_network_image
   cached_network_image: ^3.2.1
+  #https://pub.flutter-io.cn/packages/fold_wrap
+  fold_wrap: ^0.0.1
 
 dev_dependencies:
   flutter_test:
